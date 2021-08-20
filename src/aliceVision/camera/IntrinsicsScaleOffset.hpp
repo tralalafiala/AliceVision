@@ -232,16 +232,59 @@ public:
     _lockRatio = lock;
   }
 
+  /**
+   * @brief get the lock on the ratio between fx and fy
+   * @return is the ratio locked
+   */
   bool getLockRatio()
   {
     return _lockRatio;
+  }
+
+  /**
+   * @brief lock the scale
+   * @param lock is the scale locked
+   */
+  void setLockScale(bool lock) 
+  {
+    _lockScale = lock;
+  }
+
+  /**
+   * @brief get the lock on the scale
+   * @return is the scale locked
+   */
+  bool getLockScale()
+  {
+    return _lockScale;
+  }
+
+  /**
+   * @brief lock the offset
+   * @param lock is the offset locked
+   */
+  void setLockOffset(bool lock) 
+  {
+    _lockOffset = lock;
+  }
+
+  /**
+   * @brief get the lock on the offset
+   * @return is the offset locked
+   */
+  bool getLockOffset()
+  {
+    return _lockOffset;
   }
 
 protected:
   Vec2 _scale{1.0, 1.0};
   Vec2 _offset{0.0, 0.0};
   Vec2 _initialScale{-1.0, -1.0};
+  
   bool _lockRatio{true};
+  bool _lockScale{false};
+  bool _lockOffset{false};
 };
 
 } // namespace camera

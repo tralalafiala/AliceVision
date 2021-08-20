@@ -194,8 +194,29 @@ public:
 
   ~IntrinsicsScaleOffsetDisto() override = default;
 
+  /**
+   * @brief lock the distortion
+   * @param lock is the distortion locked
+   */
+  void setLockDistortion(bool lock) 
+  {
+    _lockDistortion = lock;
+  }
+
+  /**
+   * @brief get the lock on the distortion
+   * @return is the distortion locked
+   */
+  bool getLockDistortion()
+  {
+    return _lockDistortion;
+  }
+
+
 protected:
   std::shared_ptr<Distortion> _pDistortion;
+
+  bool _lockDistortion{false};
 };
 
 } // namespace camera

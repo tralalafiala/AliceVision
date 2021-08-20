@@ -339,6 +339,9 @@ bool readCamera(const Version & abcVersion, const ICamera& camera, const M44d& m
   bool poseLocked = false;
   bool poseIndependant = true;
   bool lockRatio = true;
+  bool lockScale = false;
+  bool lockOffset = false;
+  bool lockDistortion = false;
 
   if(userProps)
   {
@@ -431,6 +434,18 @@ bool readCamera(const Version & abcVersion, const ICamera& camera, const M44d& m
       if(const Alembic::Abc::PropertyHeader *propHeader = userProps.getPropertyHeader("mvg_intrinsicFocalRatioLocked"))
       {
         lockRatio = getAbcProp<Alembic::Abc::IBoolProperty>(userProps, *propHeader, "mvg_intrinsicFocalRatioLocked", sampleFrame);
+      }
+      if(const Alembic::Abc::PropertyHeader *propHeader = userProps.getPropertyHeader("mvg_intrinsicScaleLocked"))
+      {
+        lockScale = getAbcProp<Alembic::Abc::IBoolProperty>(userProps, *propHeader, "mvg_intrinsicScaleLocked", sampleFrame);
+      }
+      if(const Alembic::Abc::PropertyHeader *propHeader = userProps.getPropertyHeader("mvg_intrinsicOffsetLocked"))
+      {
+        lockOffset = getAbcProp<Alembic::Abc::IBoolProperty>(userProps, *propHeader, "mvg_intrinsicOffsetLocked", sampleFrame);
+      }
+      if(const Alembic::Abc::PropertyHeader *propHeader = userProps.getPropertyHeader("mvg_intrinsicDistortionLocked"))
+      {
+        lockOffset = getAbcProp<Alembic::Abc::IBoolProperty>(userProps, *propHeader, "mvg_intrinsicDistortionLocked", sampleFrame);
       }
       if(const Alembic::Abc::PropertyHeader *propHeader = userProps.getPropertyHeader("mvg_poseLocked"))
       {
@@ -530,6 +545,13 @@ bool readCamera(const Version & abcVersion, const ICamera& camera, const M44d& m
       initialFocalLengthPix(1) = initialFocalLengthPix(0) * mvg_intrinsicParams[1] / mvg_intrinsicParams[0];
       intrinsicScale->setInitialScale(initialFocalLengthPix);
       intrinsicScale->setLockRatio(lockRatio);
+      intrinsicScale->setLockScale(lockScale);
+      intrinsicScale->setLockOffset(lockOffset);
+    }
+
+    std::shared_ptr<camera::IntrinsicsScaleOffsetDisto> intrinsicDist = std::dynamic_pointer_cast<camera::IntrinsicsScaleOffsetDisto>(intrinsic);
+    if (intrinsicDist) {
+      intrinsicDist->setLockDistortion(lockDistortion);
     }
 
     std::shared_ptr<camera::EquiDistant> casted = std::dynamic_pointer_cast<camera::EquiDistant>(intrinsic);
